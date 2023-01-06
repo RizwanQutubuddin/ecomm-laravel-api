@@ -22,6 +22,10 @@ class UserController extends Controller
     function login(Request $req)
     {
         $user=User::where(['email'=>$req->email])->first();
+        // $pass1 = $req->input("password");
+        // $pass2 = $user->password;
+        // $a = Hash::check($pass1, $pass2);
+
         if (!$user || Hash::check($req->password, $user->password)) {
             return response([
                 "error"=>"Email Or Password mismatch"

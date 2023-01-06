@@ -31,8 +31,19 @@ class ProductController extends Controller
 
     function updateProduct(Request $req,$id)
     {
-        return $req->input();//, $id];
+        $product = Product::find($id);
+        if ($product) {
+            $product->name = $req->name;
+            $product->price = $req->price;
+            $product->description = $req->description;
+            $product->file_path=$req->file('file')->store('products');
+            $product->save();
+            return ["message" => "Product has been updated successfully","result"=>201];
+        } else {
+            return ["message" => "Product has not updated","result"=>404];
+        }
     }
+
     function deleteProduct($id)
     {
         $deleteProduct=Product::where('id', $id)->delete();
@@ -41,5 +52,10 @@ class ProductController extends Controller
         } else {
             return ["message" => "Product has not deleted","result"=>404];
         }
+    }
+
+    function search($key)
+    {
+        return Product::where('name',"Like", "%$key%")->get();
     }
 }
